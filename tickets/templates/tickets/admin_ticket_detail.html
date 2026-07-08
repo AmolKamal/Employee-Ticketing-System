@@ -1,0 +1,73 @@
+{% extends 'accounts/adminbase.html' %}
+
+{% block mainContent %}
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+    <div class="mb-4">
+        <a href="{% url 'view_team_tickets' %}" class="btn btn-sm btn-outline-secondary"><i
+                class="bi bi-arrow-left"></i> Back to Issues</a>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 text-dark">Ticket #{{ ticket.ticket_id }}: {{ ticket.title }}</h5>
+                    {% if ticket.ticket_type == 'COMPLAINT' %}
+                    <span class="badge bg-danger">Complaint</span>
+                    {% else %}
+                    <span class="badge bg-primary">Leave Application</span>
+                    {% endif %}
+                </div>
+                <div class="card-body p-4">
+                    <div class="row mb-4 bg-light p-3 rounded g-2">
+                        <div class="col-sm-6"><strong>Submitted By:</strong> {{ ticket.raised_by.name }}
+                            ({{ticket.raised_by.employee_id }})</div>
+                        <div class="col-sm-6"><strong>Date Lodged:</strong> {{ ticket.created_at|date:"F d, Y @h:i A" }}
+                        </div>
+                    </div>
+
+                    <h6 class="text-uppercase text-muted small fw-bold mb-3">Statement / Detailed Issue:</h6>
+                    <div class="p-3 border rounded bg-white text-dark style-text style-break"
+                        style="white-space: pre-wrap; min-height: 150px;">{{ ticket.detailed_issue }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0 border-top border-warning border-4">
+                <div class="card-header bg-white py-3 border-bottom">
+                    <h5 class="mb-0 text-dark"><i class="bi bi-gear-fill me-2 text-secondary"></i> Action Panel
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="mb-4">
+                        <label class="text-muted small text-uppercase fw-bold d-block mb-1">Current
+                            Status</label>
+                        {% if ticket.resolve_status == 'RAISED' %}
+                        <span class="badge bg-warning text-dark px-3 py-2 fs-6">Raised / Pending</span>
+                        {% elif ticket.resolve_status == 'PROCESSING' %}
+                        <span class="badge bg-info text-dark px-3 py-2 fs-6">In Processing</span>
+                        {% else %}
+                        <span class="badge bg-success px-3 py-2 fs-6">Closed</span>
+                        {% endif %}
+                    </div>
+
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-secondary">Modify Progress State</label>
+                            {{ form.resolve_status }}
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg">Update Ticket State</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+{% endblock %}

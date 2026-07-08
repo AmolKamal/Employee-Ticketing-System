@@ -1,8 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import ComplaintForm, LeaveApplicationForm
+from .forms import ComplaintForm, LeaveApplicationForm, TicketStatusForm
 from .models import Ticket
+
 
 @login_required
 def raise_complaint(request):
@@ -61,16 +62,52 @@ def view_tickets(request):
 
 @login_required
 def view_subordinate_tickets(request):
-    # Security check: Ensure the user is a Manager or Admin
     user_profile = request.user.employee_profile
-    if user_profile.role not in ['MANAGER', 'ADMIN']:
+    if user_profile.role == 'ADMIN':
+        all_tickets = Ticket.objects.all()
+        return render(request, 'tickets/admin_view_ticket.html',{'tickets': all_tickets})
+        
+    if user_profile.role != 'MANAGER':
         messages.error(request, "Access denied. You do not have manager privileges.")
         return redirect('dashboard')
         
-    # Fetch all tickets assigned to this manager raised by their team
     managed_tickets = Ticket.objects.filter(
         assigned_manager=user_profile
     ).order_by('-created_at')
     
     return render(request, 'tickets/manager_view_tickets.html', {'tickets': managed_tickets})
 
+@login_required
+def ticket_detail(request, ticket_id):
+    user_profile = request.user.employee_profile
+
+    user_profile = request.user.employee_profile
+    
+    
+    # Fetch the specific ticket or return a 404 page if it doesn't exist
+    ticket = get_object_or_404(Ticket, ticket_id=ticket_id)
+    
+    # Security Guardrail: Only allow the explicitly assigned manager or an Admin to view/edit this
+    if ticket.assigned_manager != user_profile and user_profile.role != 'ADMIN':
+        messages.error(request, "Access denied. You are not authorized to view this ticket.")
+        return redirect('dashboard')
+
+    if request.method == 'POST':
+        form = TicketStatusForm(request.POST, instance=ticket)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Ticket #{ticket.ticket_id} status has been updated to {ticket.get_resolve_status_display()}!")
+            return redirect('view_team_tickets')
+    else:
+        form = TicketStatusForm(instance=ticket)
+
+    if user_profile.role == 'ADMIN':
+        return render(request, 'tickets/admin_ticket_detail.html',{
+        'ticket': ticket,
+        'form': form
+    })
+
+    return render(request, 'tickets/ticket_detail.html', {
+        'ticket': ticket,
+        'form': form
+    })

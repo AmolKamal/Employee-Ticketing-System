@@ -27,7 +27,9 @@
                             <tbody>
                                 {% for ticket in tickets %}
                                 <tr>
-                                    <td class="fw-bold ps-4">#{{ ticket.ticket_id }}</td>
+                                    <td class="fw-bold ps-4"><a href="{% url 'ticket_detail' ticket.ticket_id %}" class="btn btn-sm btn-outline-primary py-1 px-2">
+                                        #{{ ticket.ticket_id }} <i class="bi bi-box-arrow-up-right ms-1" style="font-size: 0.75rem;"></i>
+                                    </a></td>
                                     <td>
                                         <div class="fw-semibold">{{ ticket.raised_by.name }}</div>
                                         <small class="text-muted">ID: {{ ticket.raised_by.employee_id }}</small>

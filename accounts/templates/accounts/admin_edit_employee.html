@@ -1,0 +1,56 @@
+{% extends 'accounts/adminbase.html' %}
+
+{% block content %}
+<div class="row justify-content-center my-4">
+    <div class="col-md-9">
+        <div class="mb-3">
+            <a href="{% url 'admin_dashboard' %}" class="btn btn-sm btn-outline-secondary"><i
+                    class="bi bi-arrow-left"></i> Back to Dashboard</a>
+        </div>
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-dark text-white py-3">
+                <h5 class="mb-0">Modify Record: {{ employee.name }} ({{ employee.employee_id }})</h5>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <h6 class="text-secondary border-bottom pb-2 mb-3">Core Profile Data</h6>
+                    <div class="row mb-3">
+                        <div class="col-md-8"><label class="form-label">Full Name</label>{{ form.name }}</div>
+                        <div class="col-md-4"><label class="form-label">Role</label>{{ form.role }}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4"><label class="form-label">Date of Birth</label>{{ form.dob }}</div>
+                        <div class="col-md-4"><label class="form-label">Gender</label>{{ form.gender }}</div>
+                        <div class="col-md-4"><label class="form-label">Blood Group</label>{{ form.blood_group }}</div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-6"><label class="form-label">Grade</label>{{ form.grade }}</div>
+                        <div class="col-md-6"><label class="form-label">Reports To (Manager)</label>{{ form.manager }}
+                        </div>
+                    </div>
+
+                    <h6 class="text-secondary border-bottom pb-2 mb-3">Contact Details</h6>
+                    <div class="row mb-3">
+                        <div class="col-md-6"><label class="form-label">Phone Number</label>{{ form.phone_number }}
+                        </div>
+                        <div class="col-md-6"><label class="form-label">Email Address</label>{{ form.email_address }}
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-6"><label class="form-label">Local Address</label>{{ form.local_address }}
+                        </div>
+                        <div class="col-md-6"><label class="form-label">Permanent Address</label>{{form.permanent_address }}</div>
+                    </div>
+
+                    <div class="d-flex gap-2 justify-content-end">
+                        <a href="{% url 'admin_dashboard' %}" class="btn btn-light border">Cancel</a>
+                        <button type="submit" class="btn btn-primary px-4">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

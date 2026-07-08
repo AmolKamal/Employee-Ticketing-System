@@ -7,6 +7,10 @@
             <div class="card-header bg-primary text-white py-3">
                 <h4 class="mb-0">Onboard New Employee</h4>
             </div>
+            <div class="mb-4">
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i>
+                    Back to Admin Panel</a>
+            </div>
             <div class="card-body p-4">
                 <form method="POST">
                     {% csrf_token %}

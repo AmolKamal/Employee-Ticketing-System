@@ -52,3 +52,11 @@ class LeaveApplicationForm(forms.ModelForm):
                 'placeholder': 'Provide a brief explanation for your leave request...'
             }),
         }
+
+class TicketStatusForm(forms.ModelForm):
+    class Meta:
+        model = Ticket
+        fields = ['resolve_status']
+        widgets = {
+            'resolve_status': forms.Select(attrs={'class': 'form-select form-select-lg'}),
+        }

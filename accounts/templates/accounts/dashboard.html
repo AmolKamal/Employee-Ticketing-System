@@ -6,6 +6,7 @@
 
 
         <main class="col-md-7 ms-sm-auto col-lg-10 px-md-4 py-4">
+
             <div
                 class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2">Welcome, {{ request.user.employee_profile.name }}</h1>
@@ -23,24 +24,24 @@
                                 <table class="table table-borderless align-middle mb-0">
                                     <tbody>
                                         <tr>
-                                            <th scope="row" class="text-muted fw-normal py-2" style="width: 35%;">Employee ID:</th>
+                                            <th scope="row" class="text-muted fst-italic fw-normal py-2" style="width: 35%;">Employee ID:</th>
                                             <td class="fw-bold py-2">{{ request.user.employee_profile.employee_id }}</td>
                                         </tr>
                                         <tr>
-                                            <th scope="row" class="text-muted fw-normal py-2">Full Name:</th>
+                                            <th scope="row" class="text-muted fw-normal py-2 fst-italic">Full Name:</th>
                                             <td class="py-2">{{ request.user.employee_profile.name }}</td>
                                         </tr>
                                         <tr>
-                                            <th scope="row" class="text-muted fw-normal py-2">Date of Birth:</th>
+                                            <th scope="row" class="text-muted fw-normal py-2 fst-italic">Date of Birth:</th>
                                             <td class="py-2">{{ request.user.employee_profile.dob|date:"F d, Y" }}</td>
                                         </tr>
                                         <tr>
-                                            <th scope="row" class="text-muted fw-normal py-2">Gender:</th>
+                                            <th scope="row" class="text-muted fw-normal py-2 fst-italic">Gender:</th>
                                             <td class="py-2">{{ request.user.employee_profile.get_gender_display }}</td>
                                         </tr>
                                         
                                         <tr>
-                                            <th scope="row" class="text-muted fw-normal py-2">Blood Group:</th>
+                                            <th scope="row" class="text-muted fw-normal py-2 fst-italic">Blood Group:</th>
                                             <td class="py-2 text-danger fw-semibold">{{ request.user.employee_profile.blood_group }}
                                             </td>
                                         </tr>
@@ -61,7 +62,7 @@
                                 <table class="table table-borderless align-middle mb-0">
                                     <tbody>
                                         <tr>
-                                            <th scope="row" class="text-muted fw-normal py-2" style="width: 35%;">Email Address:
+                                            <th scope="row" class="text-muted fw-normal py-2 fst-italic" style="width: 35%;">Email Address:
                                             </th>
                                             <td class="py-2">
                                                 <a href="mailto:{{ request.user.employee_profile.contact_profile.email_address }}"
@@ -71,15 +72,15 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th scope="row" class="text-muted fw-normal py-2">Phone Number:</th>
+                                            <th scope="row" class="text-muted fw-normal py-2 fst-italic">Phone Number:</th>
                                             <td class="py-2">{{ request.user.employee_profile.contact_profile.phone_number }}</td>
                                         </tr>
                                         <tr>
-                                            <th scope="row" class="text-muted fw-normal py-2">Local Address:</th>
+                                            <th scope="row" class="text-muted fw-normal py-2 fst-italic">Local Address:</th>
                                             <td class="py-2 text-wrap small">{{ request.user.employee_profile.contact_profile.local_address }}</td>
                                         </tr>
                                         <tr>
-                                            <th scope="row" class="text-muted fw-normal py-2">Permanent Address:</th>
+                                            <th scope="row" class="text-muted fw-normal py-2 fst-italic">Permanent Address:</th>
                                             <td class="py-2 text-wrap small">{{ request.user.employee_profile.contact_profile.permanent_address }}</td>
                                         </tr>
                                     </tbody>
@@ -91,6 +92,8 @@
             </div>
 
             <div class="row row-cols-1 row-cols-md-3 g-4 mb-4">
+
+                {% if request.user.employee_profile.role == 'DEVELOPER' %}
                 <div class="col">   
                     <div class="card h-100 border-start border-black border-4 shadow-sm">
                         <div class="card-body">
@@ -105,11 +108,17 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
                 <div class="col">
                     <div class="card h-100 border-start border-black border-4 shadow-sm">
                         <div class="card-body">
-                            <h6 class="card-title text-muted text-uppercase small">Pending Applications</h6>
-                            <p class="card-text h2 fw-bold">0</p>
+                            <h6 class="card-title text-muted text-uppercase small">Pending Tickets</h6>
+                            <p class="card-text h2 fw-bold">{% if pending %}
+                                {{pending}}
+                                {% else %}
+                                No Pending Tickets
+                                {% endif %}
+                            </p>
                         </div>
                     </div>
                 </div>

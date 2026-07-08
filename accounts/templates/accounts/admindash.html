@@ -1,0 +1,125 @@
+{% extends 'accounts/adminbase.html' %}
+
+{% block mainContent %}
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+    <div
+        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2"><i class="bi bi-diagram-3 text-primary me-2"></i> Employee List</h1>
+        <span class="badge bg-dark p-2">Hierarchy Mapping</span>
+    </div>
+
+    {% if managers %}
+    <div class="row row-cols-1 row-cols-xl-1 g-4">
+        {% for manager in managers %}
+        <div class="col">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-0 fw-bold"><i class="bi bi-person-workspace me-2"></i> {{ manager.name }}
+                        </h5>
+                        <small class="text-light opacity-75">Manager ID: {{ manager.employee_id }}</small>
+                    </div>
+                    <span class="badge bg-light text-dark fw-bold px-3">{{ manager.subordinates.count }} Direct
+                        Reports</span>
+                    <div class="d-flex gap-1">
+                        <a href="{% url 'admin_edit_employee' manager.employee_id %}" class="btn btn-sm bg-light btn-outline-danger py-1 px-2"
+                            title="Edit Profile">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                    
+                        <form action="{% url 'admin_delete_employee' manager.employee_id %}" method="POST"
+                            onsubmit="return confirm('Are you sure you want to completely remove this employee record from the system? This action cannot be undone.');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm bg-light btn-outline-danger py-1 px-2" title="Delete Profile">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                    
+                </div>
+
+                <div class="card-body">
+                    {% if manager.subordinates.all %}
+                    <div class="list-group list-group-flush">
+                        {% for dev in manager.subordinates.all %}
+                        <div class="list-group-item px-0 py-3 d-flex justify-content-between align-items-center bg-transparent">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <div class="fw-semibold text-dark">{{ dev.name }}</div>
+                                    <small class="text-muted">ID: {{ dev.employee_id }}</small>
+                                </div>
+                            </div>
+                        
+                            <div class="d-flex gap-1">
+                                <a href="{% url 'admin_edit_employee' dev.employee_id %}" class="btn btn-sm btn-outline-secondary py-1 px-2"
+                                    title="Edit Profile">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                        
+                                <form action="{% url 'admin_delete_employee' dev.employee_id %}" method="POST"
+                                    onsubmit="return confirm('Are you sure you want to completely remove this employee record from the system? This action cannot be undone.');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-outline-danger py-1 px-2" title="Delete Profile">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4 text-muted border border-dashed rounded bg-light">
+                        <i class="bi bi-person-x mb-1 d-block text-secondary fs-4"></i>
+                        <small class="small">No employees currently grouped under this manager.</small>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5 border rounded bg-white mt-4">
+        <i class="bi bi-people display-4 text-muted"></i>
+        <p class="h5 mt-3 text-secondary">No Managers Registered</p>
+        <p class="text-muted small mb-3">Add operational management roles to configure organizational trees.</p>
+        <a href="{% url 'register' %}" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg me-1"></i> Add
+            Manager Profile</a>
+    </div>
+    {% endif %}
+
+    {% if unassigned_employees %}
+    <div class="card shadow-sm border-start border-danger border-4 mt-5">
+        <div class="card-header bg-white py-3">
+            <h6 class="mb-0 text-danger fw-bold"><i class="bi bi-exclamation-octagon-fill me-2"></i> Unassigned
+                Subordinates Warning</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-sm align-middle mb-0">
+                    <thead>
+                        <tr class="text-muted small">
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Grade</th>
+                            <th>Current Action State</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for individual in unassigned_employees %}
+                        <tr>
+                            <td class="fw-semibold text-dark">#{{ individual.employee_id }}</td>
+                            <td>{{ individual.name }}</td>
+                            <td><span class="badge bg-light text-dark border">{{ individual.grade }}</span></td>
+                            <td class="text-muted small italic">Lacks Reporting Supervisor Manager Link</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</main>
+{% endblock %}
