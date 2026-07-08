@@ -113,6 +113,20 @@
                             <td>{{ individual.name }}</td>
                             <td><span class="badge bg-light text-dark border">{{ individual.grade }}</span></td>
                             <td class="text-muted small italic">Lacks Reporting Supervisor Manager Link</td>
+                            <td><div class="d-flex gap-1">
+                                <a href="{% url 'admin_edit_employee' individual.employee_id %}" class="btn btn-sm btn-outline-secondary py-1 px-2"
+                                    title="Edit Profile">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                            
+                                <form action="{% url 'admin_delete_employee' individual.employee_id %}" method="POST"
+                                    onsubmit="return confirm('Are you sure you want to completely remove this employee record from the system? This action cannot be undone.');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-outline-danger py-1 px-2" title="Delete Profile">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div></td>
                         </tr>
                         {% endfor %}
                     </tbody>
