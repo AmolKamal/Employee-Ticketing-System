@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import ComplaintForm, LeaveApplicationForm
+from .models import Ticket
 
 @login_required
 def raise_complaint(request):
@@ -44,9 +45,7 @@ def apply_leave(request):
         
     return render(request, 'tickets/apply_leave.html', {'form': form})
 
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from .models import Ticket
+
 
 @login_required
 def view_tickets(request):
@@ -56,3 +55,19 @@ def view_tickets(request):
     ).order_by('-created_at')
     
     return render(request, 'tickets/view_tickets.html', {'tickets': user_tickets})
+
+@login_required
+def view_subordinate_tickets(request):
+    # Security check: Ensure the user is a Manager or Admin
+    user_profile = request.user.employee_profile
+    if user_profile.role not in ['MANAGER', 'ADMIN']:
+        messages.error(request, "Access denied. You do not have manager privileges.")
+        return redirect('dashboard')
+        
+    # Fetch all tickets assigned to this manager raised by their team
+    managed_tickets = Ticket.objects.filter(
+        assigned_manager=user_profile
+    ).order_by('-created_at')
+    
+    return render(request, 'tickets/manager_view_tickets.html', {'tickets': managed_tickets})
+

@@ -92,7 +92,7 @@
 
             <div class="row row-cols-1 row-cols-md-3 g-4 mb-4">
                 <div class="col">   
-                    <div class="card h-100 border-start border-primary border-4 shadow-sm">
+                    <div class="card h-100 border-start border-black border-4 shadow-sm">
                         <div class="card-body">
                             <h6 class="card-title text-muted text-uppercase small">Assigned Manager</h6>
                             <p class="card-text h5">
@@ -106,13 +106,34 @@
                     </div>
                 </div>
                 <div class="col">
-                    <div class="card h-100 border-start border-warning border-4 shadow-sm">
+                    <div class="card h-100 border-start border-black border-4 shadow-sm">
                         <div class="card-body">
                             <h6 class="card-title text-muted text-uppercase small">Pending Applications</h6>
                             <p class="card-text h2 fw-bold">0</p>
                         </div>
                     </div>
                 </div>
+
+                {% if request.user.employee_profile.role == 'MANAGER' %}
+                <div class="col">
+                    <div class="card h-100 border-start border-black border-4 shadow-sm">
+                        <div class="card-body">
+                            <h6 class="card-title text-muted text-uppercase small">Team Members </h6>
+                            <p class="card-text h2 fw-bold">
+                                {% if subordinates %}
+                                <ol>
+                                {% for subordinate in subordinates %}
+                                    <li>{{ subordinate.employee_id}} : {{ subordinate.name }}</li>
+                                {% endfor %}
+                                </ol>
+                                {% else %}
+                                No Employee found
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
                 
             </div>
         </main>

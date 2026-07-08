@@ -3,6 +3,9 @@ from django.contrib.auth.models import User
 from .forms import EmployeeRegistrationForm, ContactInfoForm
 from django.db import transaction
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+
+from .models import EmployeeInfo
 
 def register_employee(request):
     if request.method == 'POST':
@@ -40,4 +43,12 @@ def register_employee(request):
 
 @login_required
 def dashboard_home(request):
-    return render(request, 'accounts/dashboard.html')
+    user_profile = request.user.employee_profile
+    if user_profile.role in ['MANAGER', 'ADMIN']:    
+        subordinates = EmployeeInfo.objects.filter(
+            manager=user_profile
+        )
+    else:
+        subordinates = ""
+
+    return render(request, 'accounts/dashboard.html',{'subordinates':subordinates})

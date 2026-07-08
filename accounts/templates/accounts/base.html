@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Employee Portal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 </head>
 
 <body class="bg-light">
@@ -54,16 +55,21 @@
                         {% if request.user.employee_profile.role == 'MANAGER' or request.user.employee_profile.role == 'ADMIN' %}
                         <hr class="text-secondary mx-2">
                         <li class="nav-item mb-2">
-                            <a class="nav-link bg-secondary text-light mx-2 py-2 d-flex align-items-center" href="#">
+                            <a class="nav-link text-warning mx-2 py-2 d-flex align-items-center" href="#">
                                 <i class="bi bi-star me-2"></i> Rate Employees
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link text-light opacity-75 mx-2 py-2 d-flex align-items-center" href="{% url 'view_team_tickets' %}">
+                                <i class="bi bi-people me-2"></i> View Employee's Complaints
                             </a>
                         </li>
                         {% endif %}
                     </ul>
     
                     <div class="p-3 bg-primary bg-opacity-25 text-white border-top border-secondary">
-                        <div class="small fw-bold text-black">{{ request.user.employee_profile.name }}</div>
-                        <div class="small text-black" style="font-size: 0.8rem;">ID: {{ request.user.employee_profile.employee_id }}</div>
+                        <div class="small fw-bold">{{ request.user.employee_profile.name }}</div>
+                        <div class="small" style="font-size: 0.8rem;">ID: {{ request.user.employee_profile.employee_id }}</div>
     
                         <form action="{% url 'logout' %}" method="POST" class="d-inline w-100">
                             {% csrf_token %}
