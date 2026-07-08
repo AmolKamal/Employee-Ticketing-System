@@ -1,0 +1,47 @@
+{% extends 'accounts/base.html' %}
+
+{% block mainContent %}
+<!-- <div class="container-fluid pf-0">
+    <div class="row g-0" style="min-height: 85vh;">
+         -->
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+            <div
+                class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">File an Issue</h1>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-8">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body p-4">
+                            <form method="POST">
+                                {% csrf_token %}
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold text-secondary">Issue Title / Summary</label>
+                                    {{ form.title }}
+                                    <div class="form-text">Provide a concise title highlighting the core problem.</div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold text-secondary">Detailed Description</label>
+                                    {{ form.detailed_issue }}
+                                    <div class="form-text">Be thorough. Include dates, times, or context if applicable.
+                                    </div>
+                                </div>
+
+                                <div class="d-flex gap-2 justify-content-end">
+                                    <a href="{% url 'dashboard' %}" class="btn btn-light border">Cancel</a>
+                                    <button type="submit" class="btn btn-danger px-4">Submit Complaint Ticket</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    <!-- </div>
+</div> -->
+{% endblock %}

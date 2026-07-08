@@ -1,0 +1,99 @@
+{% extends 'accounts/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-9">
+        <div class="card shadow-sm border-0 mb-5">
+            <div class="card-header bg-primary text-white py-3">
+                <h4 class="mb-0">Onboard New Employee</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST">
+                    {% csrf_token %}
+
+                    {% if user_form.non_field_errors %}
+                    <div class="alert alert-danger">{{ user_form.non_field_errors }}</div>
+                    {% endif %}
+
+                    <h5 class="text-secondary border-bottom pb-2 mb-3">System Credentials</h5>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Username</label>
+                            {{ user_form.username }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Password</label>
+                            {{ user_form.password }}
+                        </div>
+                    </div>
+
+                    <h5 class="text-secondary border-bottom pb-2 mb-3 mt-4">Profile Specifics</h5>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label class="form-label">Full Name</label>
+                            {{ user_form.name }}
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Role</label>
+                            {{ user_form.role }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Date of Birth</label>
+                            {{ user_form.dob }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Gender</label>
+                            {{ user_form.gender }}
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Grade</label>
+                            {{ user_form.grade }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Blood Group</label>
+                            {{ user_form.blood_group }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Reports To (Manager)</label>
+                            {{ user_form.manager }}
+                        </div>
+                    </div>
+
+                    <h5 class="text-secondary border-bottom pb-2 mb-3 mt-4">Contact Information</h5>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Phone Number</label>
+                            {{ contact_form.phone_number }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Email Address</label>
+                            {{ contact_form.email_address }}
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label">Local Address</label>
+                            {{ contact_form.local_address }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Permanent Address</label>
+                            {{ contact_form.permanent_address }}
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">Create Account Profile</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
