@@ -10,11 +10,14 @@ def raise_complaint(request):
         form = ComplaintForm(request.POST)
         if form.is_valid():
             ticket = form.save(commit=False)
+            # Attach the employee raising the ticket
             ticket.raised_by = request.user.employee_profile
             ticket.ticket_type = 'COMPLAINT' 
+            
+            # The assigned_manager is pulled automatically from form.cleaned_data via form.save()
             ticket.save()
             
-            messages.success(request, "Your complaint has been successfully registered and routed to your manager!")
+            messages.success(request, "Your complaint has been successfully submitted and routed!")
             return redirect('dashboard')
     else:
         form = ComplaintForm()

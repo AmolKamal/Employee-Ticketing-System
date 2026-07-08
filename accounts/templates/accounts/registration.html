@@ -52,10 +52,6 @@
 
                     <div class="row mb-3">
                         <div class="col-md-4">
-                            <label class="form-label">Grade</label>
-                            {{ user_form.grade }}
-                        </div>
-                        <div class="col-md-4">
                             <label class="form-label">Blood Group</label>
                             {{ user_form.blood_group }}
                         </div>
@@ -96,4 +92,66 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const roleSelect = document.getElementById('id_role');
+        const managerSelect = document.getElementById('id_manager');
+
+        // Store the original list of managers populated by Django
+        const originalOptions = Array.from(managerSelect.options);
+
+        // Inject data-role attributes into the options so JavaScript knows who is who
+        // We do this by cross-referencing text clues from Django's __str__ representation
+        originalOptions.forEach(option => {
+            const text = option.text.toUpperCase();
+            if (text.includes('(ADMIN)')) {
+                option.setAttribute('data-role', 'ADMIN');
+            } else if (text.includes('(MANAGER)')) {
+                option.setAttribute('data-role', 'MANAGER');
+            } else {
+                option.setAttribute('data-role', 'OTHER');
+            }
+        });
+
+        function filterManagers() {
+            const selectedRole = roleSelect.value;
+
+            // Clear current options
+            managerSelect.innerHTML = '';
+
+            // Always restore the default blank/empty option ("---------")
+            if (originalOptions[0] && originalOptions[0].value === '') {
+                managerSelect.appendChild(originalOptions[0]);
+            }
+
+            originalOptions.forEach(option => {
+                if (option.value === '') return; // Skip the blank choice
+
+                const optionRole = option.getAttribute('data-role');
+
+                if (selectedRole === 'MANAGER') {
+                    // If registering a Manager, they can ONLY report to an Admin
+                    if (optionRole === 'ADMIN') {
+                        managerSelect.appendChild(option.cloneNode(true));
+                    }
+                } else if (selectedRole === 'DEVELOPER') {
+                    // If registering a Developer, they can report to either a Manager or an Admin
+                    if (optionRole === 'MANAGER' || optionRole === 'ADMIN') {
+                        managerSelect.appendChild(option.cloneNode(true));
+                    }
+                } else {
+                    // If registering an Admin, they don't strictly need a manager, but show Admins just in case
+                    if (optionRole === 'ADMIN') {
+                        managerSelect.appendChild(option.cloneNode(true));
+                    }
+                }
+            });
+        }
+
+        // Trigger filter on page load and whenever the role selection changes
+        roleSelect.addEventListener('change', filterManagers);
+        filterManagers();
+    });
+</script>
 {% endblock %}

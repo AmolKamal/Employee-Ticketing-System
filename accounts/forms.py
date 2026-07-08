@@ -18,8 +18,12 @@ class EmployeeRegistrationForm(forms.ModelForm):
             'role': forms.Select(attrs={'class': 'form-select'}),
             'gender': forms.Select(attrs={'class': 'form-select'}),
             'blood_group': forms.TextInput(attrs={'class': 'form-control'}),
-            'manager': forms.Select(attrs={'class': 'form-select'}),
+            'manager': forms.Select(attrs={'class': 'form-select', 'id':'id_manager'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['manager'].queryset = EmployeeInfo.objects.exclude(role='DEVELOPER')
 
 class ContactInfoForm(forms.ModelForm):
     class Meta:

@@ -45,9 +45,10 @@ class Ticket(models.Model):
     end_date = models.DateField(null=True)
 
     def save(self, *args, **kwargs):
-        # Auto-assign the ticket to the employee's reporting manager before writing to DB
-        if self.raised_by and self.raised_by.manager:
-            self.assigned_manager = self.raised_by.manager
+        if not self.assigned_manager:
+            if self.raised_by and self.raised_by.manager:
+                self.assigned_manager = self.raised_by.manager
+                
         super().save(*args, **kwargs)
 
     def __str__(self):
